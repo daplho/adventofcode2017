@@ -12,7 +12,28 @@ import (
 func main() {
 	matrix := readMatrix("./input.txt")
 
-	fmt.Printf("%v\n", matrix)
+	checksum := 0
+	for _, row := range matrix {
+		checksum += maxMinDiff(row)
+	}
+
+	fmt.Printf("Checksum: %d\n", checksum)
+}
+
+func maxMinDiff(row []int) int {
+	min, max := row[0], row[0]
+
+	for _, num := range row {
+		if num < min {
+			min = num
+		}
+
+		if max < num {
+			max = num
+		}
+	}
+
+	return max - min
 }
 
 func readMatrix(filepath string) [][]int {
