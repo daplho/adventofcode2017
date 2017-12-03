@@ -12,15 +12,20 @@ import (
 func main() {
 	matrix := readMatrix("./input.txt")
 
-	checksum := 0
+	checksum, checksum2 := 0, 0
 	for _, row := range matrix {
 		checksum += maxMinDiff(row)
+		checksum2 += divisionDiff(row)
 	}
 
 	fmt.Printf("Checksum: %d\n", checksum)
+	fmt.Printf("Checksum2: %d\n", checksum2)
 }
 
 func maxMinDiff(row []int) int {
+	if len(row) == 0 {
+		return 0
+	}
 	min, max := row[0], row[0]
 
 	for _, num := range row {
@@ -34,6 +39,22 @@ func maxMinDiff(row []int) int {
 	}
 
 	return max - min
+}
+
+func divisionDiff(row []int) int {
+	for i := 0; i < len(row); i++ {
+		for j := i + 1; j < len(row); j++ {
+			if row[i]%row[j] == 0 {
+				return row[i] / row[j]
+			} else if row[j]%row[i] == 0 {
+				return row[j] / row[i]
+			} else {
+				continue
+			}
+		}
+	}
+
+	return 0
 }
 
 func readMatrix(filepath string) [][]int {
