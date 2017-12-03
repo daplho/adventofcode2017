@@ -1,3 +1,4 @@
+// http://adventofcode.com/2017/day/1
 package main
 
 import "fmt"
