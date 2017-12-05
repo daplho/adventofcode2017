@@ -44,6 +44,7 @@ func adjacentSum(grid map[Point]int, x int, y int) int {
 	if x == 0 && y == 0 {
 		return 1
 	}
+
 	sum := 0
 	for i := -1; i <= 1; i++ {
 		for j := -1; j <= 1; j++ {
