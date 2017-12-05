@@ -1,4 +1,5 @@
-// http://adventofcode.com/2017/day/2
+// http://adventofcode.com/2017/day/4
+
 package main
 
 import (
@@ -6,16 +7,21 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 )
 
-func main() {
-	totalValid := readPassphraseList("./input.txt")
+type ReadLine func(string) bool
 
+func main() {
+	totalValid := readPassphraseList("./input.txt", readLine)
 	fmt.Printf("Total Valid Passphrases: %d\n", totalValid)
+
+	totalValidAnagrams := readPassphraseList("./input.txt", readLineAnagram)
+	fmt.Printf("Total Valid Anagram Passphrases: %d\n", totalValidAnagrams)
 }
 
-func readPassphraseList(filepath string) int {
+func readPassphraseList(filepath string, fn ReadLine) int {
 	totalValid := 0
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -25,7 +31,7 @@ func readPassphraseList(filepath string) int {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		valid := readLine(scanner.Text())
+		valid := fn(scanner.Text())
 		if valid {
 			totalValid++
 		}
@@ -50,4 +56,25 @@ func readLine(line string) bool {
 	}
 
 	return true
+}
+
+func readLineAnagram(line string) bool {
+	wordsMap := make(map[string]int, 0)
+
+	words := strings.Fields(line)
+	for _, word := range words {
+		wordKey := sortString(word)
+		wordsMap[wordKey]++
+		if wordsMap[wordKey] > 1 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func sortString(word string) string {
+	s := strings.Split(word, "")
+	sort.Strings(s)
+	return strings.Join(s, "")
 }
