@@ -9,14 +9,26 @@ import (
 	"strconv"
 )
 
-func main() {
-	instructions := readFile("./input.txt")
+type AdjustOffset func(int) int
 
-	steps := findExit(instructions)
-	fmt.Printf("Steps to exit: '%d'\n", steps)
+func main() {
+	instructionsOne := readFile("./input.txt")
+	instructionsTwo := make([]int, len(instructionsOne))
+	copy(instructionsTwo, instructionsOne)
+
+	stepsOne := findExit(instructionsOne, func(x int) int { return 1 })
+	fmt.Printf("Steps to Exit One: '%d'\n", stepsOne)
+
+	stepsTwo := findExit(instructionsTwo, func(x int) int {
+		if x >= 3 {
+			return -1
+		}
+		return 1
+	})
+	fmt.Printf("Steps to Exit Two: '%d'\n", stepsTwo)
 }
 
-func findExit(instructions []int) int {
+func findExit(instructions []int, f AdjustOffset) int {
 	i, steps := 0, 0
 	for {
 		current := i
@@ -26,7 +38,7 @@ func findExit(instructions []int) int {
 		}
 
 		i = i + instructions[i]
-		instructions[current]++
+		instructions[current] += f(instructions[current])
 		steps++
 	}
 
