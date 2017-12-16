@@ -20,12 +20,10 @@ func main() {
 
 		prevLevel := makeMapCopy(nodesByLevel[level-1])
 		for key, subkeys := range prevLevel {
-			// if subkeys != nil && len(subkeys) > 0 {
 			if prevLevelContainsAnyKey(prevLevel, subkeys) {
 				nodesByLevel[level][key] = subkeys
 				delete(nodesByLevel[level-1], key)
 			}
-			// }
 		}
 
 		if len(nodesByLevel[level]) == 0 {
