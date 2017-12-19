@@ -80,17 +80,15 @@ func readFile(filepath string) map[string][]string {
 }
 
 func parseLine(line string) (string, []string) {
-	lineTokens := strings.Split(line, "->")
+	lineTokens := strings.Split(line, " ->")
 
 	if len(lineTokens) == 1 {
 		keyWithWeightTokens := strings.Split(lineTokens[0], " ")
-		key := strings.Trim(keyWithWeightTokens[0], " ")
-		return key, nil
+		return keyWithWeightTokens[0], nil
 	}
 
-	keyWithWeight, subkeysString := strings.Trim(lineTokens[0], " "), strings.Trim(lineTokens[1], " ")
+	keyWithWeight, subkeysString := lineTokens[0], lineTokens[1]
 	keyWithWeightTokens := strings.Split(keyWithWeight, " ")
-	key := strings.Trim(keyWithWeightTokens[0], " ")
 
-	return key, strings.Split(subkeysString, ", ")
+	return keyWithWeightTokens[0], strings.Split(subkeysString, ", ")
 }
