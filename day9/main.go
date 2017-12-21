@@ -16,38 +16,52 @@ func main() {
 	fmt.Printf("# of groups: %d\n", score)
 }
 
-func countGroups(input string) int64 {
+func countGroups(input string) int {
 	garbage := false
 	ignoreNext := false
 	s := stack.NewStack(uint(len(input)))
-	var sum int64 = 0
+	var sum int = 0
 	for _, c := range input {
 		switch c {
 		case '{':
-			if !garbage && !ignoreNext {
+			if !garbage {
 				s.Push(c)
-			}
-		case '}':
-			if !garbage && !ignoreNext {
-				sum += int64(s.Len())
-				s.Pop()
-			}
-		case '<':
-			if !ignoreNext {
-				garbage = true
-			}
-		case '>':
-			if !ignoreNext {
-				garbage = false
-			}
-		case '!':
-			if !ignoreNext {
-				ignoreNext = true
 			} else {
 				ignoreNext = false
 			}
+		case '}':
+			if !garbage {
+				sum += int(s.Len())
+				s.Pop()
+			} else {
+				ignoreNext = false
+			}
+		case '<':
+			if !garbage {
+				garbage = true
+			} else {
+				ignoreNext = false
+			}
+		case '>':
+			if garbage {
+				if !ignoreNext {
+					garbage = false
+				} else {
+					ignoreNext = false
+				}
+			}
+		case '!':
+			if garbage {
+				if !ignoreNext {
+					ignoreNext = true
+				} else {
+					ignoreNext = false
+				}
+			}
 		default:
-			ignoreNext = false
+			if garbage {
+				ignoreNext = false
+			}
 		}
 	}
 
