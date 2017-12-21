@@ -12,12 +12,14 @@ func main() {
 	puzzleInput := readFile("./input.txt")
 	//fmt.Printf("Puzzle input: '%s'", puzzleInput)
 
-	score := countGroups(puzzleInput)
+	score, garbageCount := countGroups(puzzleInput)
 	fmt.Printf("# of groups: %d\n", score)
+	fmt.Printf("# of garbage: %d\n", garbageCount)
 }
 
-func countGroups(input string) int {
+func countGroups(input string) (int, int) {
 	garbage := false
+	garbageCount := 0
 	ignoreNext := false
 	s := stack.NewStack(uint(len(input)))
 	var sum int = 0
@@ -27,6 +29,9 @@ func countGroups(input string) int {
 			if !garbage {
 				s.Push(c)
 			} else {
+				if !ignoreNext {
+					garbageCount++
+				}
 				ignoreNext = false
 			}
 		case '}':
@@ -34,12 +39,18 @@ func countGroups(input string) int {
 				sum += int(s.Len())
 				s.Pop()
 			} else {
+				if !ignoreNext {
+					garbageCount++
+				}
 				ignoreNext = false
 			}
 		case '<':
 			if !garbage {
 				garbage = true
 			} else {
+				if !ignoreNext {
+					garbageCount++
+				}
 				ignoreNext = false
 			}
 		case '>':
@@ -60,6 +71,9 @@ func countGroups(input string) int {
 			}
 		default:
 			if garbage {
+				if !ignoreNext {
+					garbageCount++
+				}
 				ignoreNext = false
 			}
 		}
@@ -67,7 +81,7 @@ func countGroups(input string) int {
 
 	fmt.Printf("stack size: %d\n", s.Len())
 
-	return sum
+	return sum, garbageCount
 }
 
 func readFile(filepath string) string {
